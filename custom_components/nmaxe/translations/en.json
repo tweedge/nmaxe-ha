@@ -180,12 +180,6 @@
       "benchmark_mode": {
         "name": "Benchmark mode"
       },
-      "mining": {
-        "name": "Mining"
-      },
-      "paused": {
-        "name": "Paused"
-      },
       "pool_connected": {
         "name": "Pool connected"
       }

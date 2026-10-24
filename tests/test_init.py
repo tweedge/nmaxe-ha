@@ -76,11 +76,11 @@ async def test_setup_creates_entities(hass: HomeAssistant) -> None:
         "pool_source",
         "fan_0_speed",
         "fan_0_rpm",
-        "mining",
         "pool_connected",
-        "paused",
     }
     assert expected <= entities.keys()
+    assert "mining" not in entities
+    assert "paused" not in entities
 
     core = {
         "blocks_found",
@@ -133,8 +133,6 @@ async def test_setup_creates_entities(hass: HomeAssistant) -> None:
     assert hass.states.get(entities["shares_submitted"].entity_id) is None
     assert hass.states.get(entities["pool_source"].entity_id) is None
     assert hass.states.get(entities["fan_0_rpm"].entity_id) is None
-    assert hass.states.get(entities["mining"].entity_id) is None
-    assert hass.states.get(entities["paused"].entity_id) is None
 
     device = dr.async_get(hass).async_get_device_by_identifier(
         (DOMAIN, entry.entry_id),
@@ -197,6 +195,20 @@ async def test_migration_disables_non_core_entities(hass: HomeAssistant) -> None
         suggested_object_id="asic_temperature",
         disabled_by=er.RegistryEntryDisabler.USER,
     )
+    mining = registry.async_get_or_create(
+        DOMAIN,
+        "binary_sensor",
+        f"{prefix}mining",
+        config_entry=entry,
+        suggested_object_id="mining",
+    )
+    paused = registry.async_get_or_create(
+        DOMAIN,
+        "binary_sensor",
+        f"{prefix}paused",
+        config_entry=entry,
+        suggested_object_id="paused",
+    )
 
     assert await async_migrate_entry(hass, entry)
 
@@ -210,3 +222,39 @@ async def test_migration_disables_non_core_entities(hass: HomeAssistant) -> None
         registry.async_get(user_disabled.entity_id).disabled_by
         is er.RegistryEntryDisabler.USER
     )
+    assert registry.async_get(mining.entity_id) is None
+    assert registry.async_get(paused.entity_id) is None
+
+
+async def test_migration_v2_removes_redundant_entities(hass: HomeAssistant) -> None:
+    """Remove redundant entities without changing other entity preferences."""
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data={CONF_HOST: HOST},
+        unique_id=UNIQUE_ID,
+        version=2,
+    )
+    entry.add_to_hass(hass)
+    registry = er.async_get(hass)
+    prefix = f"{entry.entry_id}_"
+
+    enabled_non_core = registry.async_get_or_create(
+        DOMAIN,
+        "sensor",
+        f"{prefix}input_voltage",
+        config_entry=entry,
+        suggested_object_id="input_voltage",
+    )
+    mining = registry.async_get_or_create(
+        DOMAIN,
+        "binary_sensor",
+        f"{prefix}mining",
+        config_entry=entry,
+        suggested_object_id="mining",
+    )
+
+    assert await async_migrate_entry(hass, entry)
+
+    assert entry.version == CONFIG_ENTRY_VERSION
+    assert registry.async_get(enabled_non_core.entity_id).disabled_by is None
+    assert registry.async_get(mining.entity_id) is None

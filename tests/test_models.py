@@ -11,6 +11,7 @@ from custom_components.nmaxe.exceptions import NMAxeDataError
 from custom_components.nmaxe.models import (
     _as_compact_number,
     build_unique_id,
+    format_compact_number,
     is_supported_model,
     parse_pool_config,
     parse_system_info,
@@ -36,6 +37,29 @@ from tests.fixtures import POOL_CONFIG_PAYLOAD, SYSTEM_INFO, SYSTEM_INFO_PAYLOAD
 def test_compact_number(raw: object, expected: float | None) -> None:
     """Parse firmware-formatted difficulty and hashrate values."""
     assert _as_compact_number(raw) == expected
+
+
+@pytest.mark.parametrize(
+    ("value", "expected"),
+    [
+        (None, None),
+        (0, "0"),
+        (999, "999"),
+        (1000, "1 K"),
+        (2500, "2.5 K"),
+        (65_536, "65.54 K"),
+        (999_999, "1 M"),
+        (1_230_000, "1.23 M"),
+        (88_550_000_000_000, "88.55 T"),
+        (1.5, "1.5"),
+        (-2500, "-2.5 K"),
+        (float("nan"), None),
+        (float("inf"), None),
+    ],
+)
+def test_format_compact_number(value: float | None, expected: str | None) -> None:
+    """Format large difficulty values with compact suffixes."""
+    assert format_compact_number(value) == expected
 
 
 @pytest.mark.parametrize("field", ["identity", "miner"])

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import re
 from dataclasses import dataclass
 from typing import Any, Final
@@ -24,6 +25,7 @@ _SUFFIX_MULTIPLIERS: Final = {
     "Z": 1e21,
     "Y": 1e24,
 }
+_SUFFIXES: Final = ("", "K", "M", "G", "T", "P", "E", "Z", "Y")
 
 
 @dataclass(frozen=True, slots=True)
@@ -202,6 +204,25 @@ def _as_compact_number(value: Any) -> float | None:
     number = float(match.group(1))
     multiplier = _SUFFIX_MULTIPLIERS[match.group(2).upper()]
     return number * multiplier
+
+
+def format_compact_number(value: float | None) -> str | None:
+    """Format a number with a compact SI suffix, such as 88.55 T."""
+    if value is None or not math.isfinite(value):
+        return None
+    if value == 0:
+        return "0"
+
+    sign = "-" if value < 0 else ""
+    magnitude = abs(value)
+    suffix_index = 0
+    while magnitude >= 999.995 and suffix_index < len(_SUFFIXES) - 1:
+        magnitude /= 1000
+        suffix_index += 1
+
+    number = f"{magnitude:.2f}".rstrip("0").rstrip(".")
+    suffix = f" {_SUFFIXES[suffix_index]}" if suffix_index else ""
+    return f"{sign}{number}{suffix}"
 
 
 def _parse_fans(value: Any) -> tuple[FanData, ...]:

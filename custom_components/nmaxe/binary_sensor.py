@@ -32,7 +32,7 @@ class NMAxeBinarySensorEntityDescription(BinarySensorEntityDescription):
     value_fn: Callable[[NMAxeData], bool]
 
 
-def _is_mining(data: NMAxeData) -> bool:
+def _is_running(data: NMAxeData) -> bool:
     return (
         data.info.miner.state.strip().casefold() == "running"
         and not data.info.miner.paused
@@ -40,11 +40,7 @@ def _is_mining(data: NMAxeData) -> bool:
 
 
 def _pool_connected(data: NMAxeData) -> bool:
-    return bool(data.info.stratum.url) and _is_mining(data)
-
-
-def _is_paused(data: NMAxeData) -> bool:
-    return data.info.miner.paused
+    return bool(data.info.stratum.url) and _is_running(data)
 
 
 def _benchmark_mode(data: NMAxeData) -> bool:
@@ -53,24 +49,11 @@ def _benchmark_mode(data: NMAxeData) -> bool:
 
 BINARY_SENSOR_DESCRIPTIONS: tuple[NMAxeBinarySensorEntityDescription, ...] = (
     NMAxeBinarySensorEntityDescription(
-        key="mining",
-        translation_key="mining",
-        device_class=BinarySensorDeviceClass.RUNNING,
-        icon="mdi:pickaxe",
-        value_fn=_is_mining,
-    ),
-    NMAxeBinarySensorEntityDescription(
         key="pool_connected",
         translation_key="pool_connected",
         device_class=BinarySensorDeviceClass.CONNECTIVITY,
         icon="mdi:lan-connect",
         value_fn=_pool_connected,
-    ),
-    NMAxeBinarySensorEntityDescription(
-        key="paused",
-        translation_key="paused",
-        icon="mdi:pause-circle",
-        value_fn=_is_paused,
     ),
     NMAxeBinarySensorEntityDescription(
         key="benchmark_mode",

@@ -13,13 +13,15 @@ The integration never changes miner settings. It only performs HTTP GETs against
 
 - Hashrate, efficiency (J/TH), power, input voltage/current
 - ASIC and VCORE temperatures, frequency, requested/actual core voltage
-- Blocks found, shares accepted/rejected/submitted, acceptance rate, best/network/pool/last difficulty
+- Blocks found, shares accepted/rejected/submitted, acceptance rate, and compact best/network/pool/last difficulty
 - Active pool, pool username (your public payout key/worker), primary/fallback pools, active pool source
-- Mining, pool-connected, paused, and benchmark-mode binary sensors
+- Pool-connected and benchmark-mode binary sensors
 - Fan speed/RPM, Wi-Fi RSSI/SSID, free heap, uptime, firmware version
 - Diagnostics download with secret-like fields redacted
 - Configurable polling intervals, with pool settings read much less often than status
 - Only core entities enabled by default; every other sensor is available but disabled
+
+Difficulty sensors use compact SI suffixes such as `88.55 T`; the numeric value remains available as the `raw_value` attribute.
 
 ## Enabled by default
 

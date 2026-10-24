@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from operator import attrgetter
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -30,7 +30,7 @@ from homeassistant.helpers.typing import StateType
 
 from .const import DEFAULT_ENABLED_ENTITY_KEYS
 from .entity import NMAxeEntity
-from .models import NMAxeData
+from .models import NMAxeData, format_compact_number
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -48,6 +48,7 @@ class NMAxeSensorEntityDescription(SensorEntityDescription):
     """Describes a sensor and how to read its value."""
 
     value_fn: Callable[[NMAxeData], StateType]
+    raw_value_fn: Callable[[NMAxeData], float | None] | None = None
 
 
 def _scaled(value: float | None, divisor: float) -> float | None:
@@ -245,41 +246,36 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         key="best_difficulty_ever",
         translation_key="best_difficulty_ever",
         icon="mdi:trophy",
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=2,
-        value_fn=attrgetter("info.miner.best_diff_ever"),
+        value_fn=lambda data: format_compact_number(data.info.miner.best_diff_ever),
+        raw_value_fn=attrgetter("info.miner.best_diff_ever"),
     ),
     NMAxeSensorEntityDescription(
         key="best_difficulty_session",
         translation_key="best_difficulty_session",
         icon="mdi:trophy-outline",
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=2,
-        value_fn=attrgetter("info.miner.best_diff_session"),
+        value_fn=lambda data: format_compact_number(data.info.miner.best_diff_session),
+        raw_value_fn=attrgetter("info.miner.best_diff_session"),
     ),
     NMAxeSensorEntityDescription(
         key="network_difficulty",
         translation_key="network_difficulty",
         icon="mdi:earth",
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=2,
-        value_fn=attrgetter("info.miner.network_diff"),
+        value_fn=lambda data: format_compact_number(data.info.miner.network_diff),
+        raw_value_fn=attrgetter("info.miner.network_diff"),
     ),
     NMAxeSensorEntityDescription(
         key="pool_difficulty",
         translation_key="pool_difficulty",
         icon="mdi:pool",
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=2,
-        value_fn=attrgetter("info.miner.pool_diff"),
+        value_fn=lambda data: format_compact_number(data.info.miner.pool_diff),
+        raw_value_fn=attrgetter("info.miner.pool_diff"),
     ),
     NMAxeSensorEntityDescription(
         key="last_share_difficulty",
         translation_key="last_share_difficulty",
         icon="mdi:gauge",
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=2,
-        value_fn=attrgetter("info.miner.last_diff"),
+        value_fn=lambda data: format_compact_number(data.info.miner.last_diff),
+        raw_value_fn=attrgetter("info.miner.last_diff"),
     ),
     NMAxeSensorEntityDescription(
         key="blocks_found",
@@ -521,3 +517,14 @@ class NMAxeSensor(NMAxeEntity, SensorEntity):
     def native_value(self) -> StateType:
         """Return the current sensor value."""
         return self.entity_description.value_fn(self.coordinator.data)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """Return the raw numeric value for compact display sensors."""
+        raw_value_fn = self.entity_description.raw_value_fn
+        if raw_value_fn is None:
+            return None
+        raw_value = raw_value_fn(self.coordinator.data)
+        if raw_value is None:
+            return None
+        return {"raw_value": raw_value}

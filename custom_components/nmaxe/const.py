@@ -7,7 +7,8 @@ from logging import Logger, getLogger
 DOMAIN = "nmaxe"
 LOGGER: Logger = getLogger(__package__)
 
-CONFIG_ENTRY_VERSION = 2
+CONFIG_ENTRY_VERSION = 3
+REMOVED_ENTITY_KEYS = frozenset({"mining", "paused"})
 DEFAULT_ENABLED_ENTITY_KEYS = frozenset(
     {
         "blocks_found",

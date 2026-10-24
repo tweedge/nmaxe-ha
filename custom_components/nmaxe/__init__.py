@@ -14,6 +14,7 @@ from .const import (
     CONFIG_ENTRY_VERSION,
     DEFAULT_ENABLED_ENTITY_KEYS,
     LOGGER,
+    REMOVED_ENTITY_KEYS,
 )
 from .coordinator import NMAxeCoordinator
 from .data import NMAxeRuntimeData
@@ -44,21 +45,28 @@ async def async_unload_entry(hass: HomeAssistant, entry: NMAxeConfigEntry) -> bo
 
 
 async def async_migrate_entry(hass: HomeAssistant, entry: NMAxeConfigEntry) -> bool:
-    """Disable non-core entities added by older integration versions."""
+    """Remove redundant entities and disable non-core entities."""
     if entry.version > CONFIG_ENTRY_VERSION:
         return False
 
     if entry.version < CONFIG_ENTRY_VERSION:
+        old_version = entry.version
         registry = er.async_get(hass)
         prefix = f"{entry.entry_id}_"
         for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
             key = entity.unique_id.removeprefix(prefix)
-            if key in DEFAULT_ENABLED_ENTITY_KEYS or entity.disabled_by is not None:
+            if key in REMOVED_ENTITY_KEYS:
+                registry.async_remove(entity.entity_id)
                 continue
-            registry.async_update_entity(
-                entity.entity_id,
-                disabled_by=er.RegistryEntryDisabler.INTEGRATION,
-            )
+            if (
+                old_version < 2
+                and key not in DEFAULT_ENABLED_ENTITY_KEYS
+                and entity.disabled_by is None
+            ):
+                registry.async_update_entity(
+                    entity.entity_id,
+                    disabled_by=er.RegistryEntryDisabler.INTEGRATION,
+                )
         hass.config_entries.async_update_entry(
             entry,
             version=CONFIG_ENTRY_VERSION,
