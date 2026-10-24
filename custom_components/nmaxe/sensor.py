@@ -159,6 +159,7 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=3,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_input_voltage,
     ),
     NMAxeSensorEntityDescription(
@@ -168,6 +169,7 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_input_current,
     ),
     NMAxeSensorEntityDescription(
@@ -177,6 +179,7 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=1,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=attrgetter("info.temps.asic_c"),
     ),
     NMAxeSensorEntityDescription(
@@ -186,6 +189,7 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=1,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=attrgetter("info.temps.vcore_c"),
     ),
     NMAxeSensorEntityDescription(
@@ -196,6 +200,7 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfFrequency.MEGAHERTZ,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=0,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=attrgetter("info.asic.frequency_mhz"),
     ),
     NMAxeSensorEntityDescription(
@@ -206,6 +211,7 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=3,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_vcore_requested,
     ),
     NMAxeSensorEntityDescription(
@@ -216,6 +222,7 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=3,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=_vcore_actual,
     ),
     NMAxeSensorEntityDescription(
@@ -409,6 +416,7 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_class=SensorStateClass.TOTAL_INCREASING,
         suggested_display_precision=0,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=attrgetter("info.miner.uptime_seconds"),
     ),
     NMAxeSensorEntityDescription(
@@ -419,6 +427,7 @@ SENSOR_DESCRIPTIONS: tuple[NMAxeSensorEntityDescription, ...] = (
         native_unit_of_measurement=UnitOfTime.SECONDS,
         state_class=SensorStateClass.TOTAL_INCREASING,
         suggested_display_precision=0,
+        entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=attrgetter("info.miner.uptime_ever"),
     ),
     NMAxeSensorEntityDescription(
@@ -467,6 +476,7 @@ async def async_setup_entry(
                     native_unit_of_measurement=unit,
                     state_class=SensorStateClass.MEASUREMENT,
                     suggested_display_precision=0,
+                    entity_category=EntityCategory.DIAGNOSTIC,
                     value_fn=lambda data, fan_id=fan.id, fan_field=field: _fan_value(
                         data,
                         fan_id,

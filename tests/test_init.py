@@ -8,6 +8,7 @@ from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers.entity import EntityCategory
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.nmaxe import async_migrate_entry
@@ -94,8 +95,25 @@ async def test_setup_creates_entities(hass: HomeAssistant) -> None:
         entity = entities[key]
         if key in core:
             assert entity.disabled_by is None
+            assert entity.entity_category is None
         else:
             assert entity.disabled_by is er.RegistryEntryDisabler.INTEGRATION
+
+    diagnostic = {
+        "asic_frequency",
+        "asic_temperature",
+        "fan_0_rpm",
+        "fan_0_speed",
+        "input_current",
+        "input_voltage",
+        "total_uptime",
+        "uptime",
+        "vcore_actual",
+        "vcore_requested",
+        "vcore_temperature",
+    }
+    for key in diagnostic:
+        assert entities[key].entity_category is EntityCategory.DIAGNOSTIC
 
     def state_for(key: str):
         entity = entities[key]

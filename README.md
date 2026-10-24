@@ -35,6 +35,8 @@ The default dashboard stays focused on mining health:
 
 All other sensors and binary sensors are still created and available, but disabled in the entity registry. Enable the ones you need from the device's entity list.
 
+Technical telemetry such as input voltage/current, ASIC frequency, temperatures, core voltages, fan speeds, and uptime is also categorized as **Diagnostic**, so it stays grouped with device diagnostics rather than normal controls.
+
 ## Installation
 
 ### HACS
