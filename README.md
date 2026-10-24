@@ -7,39 +7,9 @@
 [![Follow author on Bluesky](https://img.shields.io/bluesky/followers/tweedge.net)](https://bsky.app/profile/tweedge.net)
 [![Follow author on Mastodon](https://img.shields.io/mastodon/follow/108210086817505115?domain=https%3A%2F%2Fcybersecurity.theater)](https://cybersecurity.theater/@tweedge)
 
-A read-only Home Assistant integration for NMAxe-family miners running [AxeOS firmware](https://github.com/NMminer1024/ESP-Miner-NMAxe). It polls the miner's local API slowly and exposes hashrate, power, temperatures, blocks, shares, pool status, payout username, fans, Wi-Fi, and system health.
+A read-only Home Assistant integration for NMAxe-family miners running [AxeOS firmware](https://github.com/NMminer1024/ESP-Miner-NMAxe). It polls the miner's local API and exposes hashrate, power, temperatures, blocks, shares, pool status, payout username, fans, Wi-Fi, and system health.
 
 The integration never changes miner settings. It only performs HTTP GETs against the local device.
-
-## Features
-
-- Hashrate, efficiency (J/TH), power, input voltage/current
-- ASIC and VCORE temperatures, frequency, requested/actual core voltage
-- Blocks found, shares accepted/rejected/submitted, acceptance rate, and compact best/network/pool/last difficulty
-- Active pool, pool username (your public payout key/worker), primary/fallback pools, active pool source
-- Pool-connected and benchmark-mode binary sensors
-- Fan speed/RPM, Wi-Fi RSSI/SSID, free heap, uptime, firmware version
-- Diagnostics download with secret-like fields redacted
-- Configurable polling intervals, with pool settings read much less often than status
-- Only core entities enabled by default; every other sensor is available but disabled
-
-Difficulty sensors use compact SI suffixes such as `88.55 T`; the numeric value remains available as the `raw_value` attribute.
-
-## Enabled by default
-
-The default dashboard stays focused on mining health:
-
-- Blocks found
-- Efficiency
-- Hashrate
-- Miner state
-- Pool connected
-- Power
-- Share acceptance rate
-
-All other sensors and binary sensors are still created and available, but disabled in the entity registry. Enable the ones you need from the device's entity list.
-
-Technical telemetry such as input voltage/current, ASIC frequency, temperatures, core voltages, fan speeds, and uptime is also categorized as **Diagnostic**, so it stays grouped with device diagnostics rather than normal controls.
 
 ## Installation
 
@@ -63,29 +33,59 @@ cp -r /tmp/nmaxe-ha/custom_components/nmaxe /config/custom_components/
 
 Restart Home Assistant, then add the integration as described above.
 
-A DHCP reservation for the miner is strongly recommended. If its address changes, use **Reconfigure** on the integration entry rather than removing and re-adding it.
+A static IP or hostname for the miner is strongly recommended. If its address changes, use **Reconfigure** on the integration entry rather than removing and re-adding it.
+
+## Features
+
+- Hashrate, efficiency (J/TH), power, input voltage/current
+- ASIC and VCORE temperatures, frequency, requested/actual core voltage
+- Blocks found, shares accepted/rejected/submitted, acceptance rate, and compact best/network/pool/last difficulty
+- Active pool, pool username (your public payout key/worker), primary/fallback pools, active pool source
+- Pool-connected and benchmark-mode binary sensors
+- Fan speed/RPM, Wi-Fi RSSI/SSID, free heap, uptime, firmware version
+- Diagnostics download with secret-like fields redacted
+- Configurable polling intervals, with pool settings read much less often than status
+- Only core entities enabled by default; every other sensor is available but disabled
+
+Difficulty sensors use compact SI suffixes such as `88.55 T`; the numeric value remains available as the `raw_value` attribute.
+
+### Enabled by default
+
+The default dashboard stays focused on high-level device health and mining speed:
+
+- Blocks found
+- Efficiency
+- Hashrate
+- Miner state
+- Pool connected
+- Power
+- Share acceptance rate
+
+All other sensors are still created and available, but disabled by default. Enable the ones you need from the device's entity list.
+
+Technical telemetry such as input voltage/current, ASIC frequency, temperatures, core voltages, fan speeds, and uptime are categorized as **Diagnostic**.
 
 ## Options
 
 - **Status update interval**: seconds between `/api/system/info` reads. Default `60`, minimum `15`, maximum `3600`.
 - **Pool settings refresh interval**: seconds between `/api/setting/mining` reads. Default `600`. Set to `0` to disable that request; primary/fallback pool and pool-source sensors then show `unknown`.
 
-The default intervals are intentionally conservative for the ESP32. There is no websocket or streaming connection.
+The default intervals are intentionally conservative for the ESP32 since it's not a particularly fast device. There is no websocket or streaming connection.
 
-AxeOS does not expose the raw stratum socket state, so **Pool connected** means the miner reports `running` and has an active pool URL. It is a useful inference, not a separate TCP health check.
+AxeOS does not expose the raw stratum socket state, so **Pool connected** means the miner reports `running` and has an active pool URL.
 
 ## Security
 
-This integration is designed for security-sensitive miners:
+This integration is designed not to introduce substantial *new* security risks into your environment. AxeOS itself does not (as of writing) require any password to modify settings or implement authentication, meaning it would be trivial for an attacker on your local network to change your settings (ex. mine on their behalf) or brick your device (ex. upload junk firmware). In addition, it does not support HTTPS, just HTTP. I really wouldn't recommend exposing AxeOS to the internet, and I've got it on a locked-down, separate subnet (which my HomeAssistant instance can see) for safety.
 
-- Only unauthenticated HTTP `GET` requests are made. There are no write, reboot, pause, or configuration endpoints.
+That said, to interface with the NMAxe miner, this code performs the following:
+
+- Only unauthenticated HTTP `GET` requests are made. There are no write, reboot, pause, or configuration endpoints implemented in this repo.
 - `/api/system/info` contains the pool password. The parser keeps only the pool URL and username; the password is discarded before data reaches the coordinator, entities, diagnostics, or logs.
 - `/api/setting/mining` also contains pool passwords. It is read at most once per pool refresh interval, and only URL/username fields are retained.
 - Diagnostics recursively redact password, secret, token, and API-key-like fields.
 - Responses are capped at 64 KiB, redirects are not followed, requests time out after 10 seconds, and only plain `http://` hosts without paths or credentials are accepted.
 - No cloud service, telemetry, or external dependency is used.
-
-The AxeOS API itself is unauthenticated and plain HTTP. Put miners on a trusted VLAN and never expose their web interface directly to the internet. Monitoring does not make the miner's own API secure.
 
 ## Troubleshooting
 
@@ -107,7 +107,7 @@ ruff check .
 ruff format --check .
 ```
 
-To regenerate the brand assets:
+To regenerate the icons/assets:
 
 ```bash
 pip install -r requirements_brand.txt
@@ -120,4 +120,4 @@ CI runs hassfest, HACS validation, Ruff, pytest, CodeQL, dependency review, and 
 
 ## License
 
-MIT. Not affiliated with NMTech, NMminer, or the NMAxe project. The brand pickaxe glyph is from Material Design Icons (Apache-2.0).
+MIT. THis project is not affiliated with NMTech, NMminer, or the NMAxe project. The pickaxe glyph used in assets is from Material Design Icons (Apache-2.0).
