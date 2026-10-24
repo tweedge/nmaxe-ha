@@ -135,6 +135,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"scripts/**" = ["T201"]
 "tests/**" = [
   "D",
   "PLR2004",
