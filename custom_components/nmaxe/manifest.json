@@ -1,0 +1,16 @@
+{
+  "domain": "nmaxe",
+  "name": "NMAxe",
+  "codeowners": [
+    "@tweedge"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/tweedge/nmaxe-hacs",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/tweedge/nmaxe-hacs/issues",
+  "loggers": [
+    "nmaxe"
+  ],
+  "version": "0.1.0"
+}

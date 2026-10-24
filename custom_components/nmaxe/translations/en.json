@@ -1,0 +1,194 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to an NMAxe miner",
+        "description": "Enter the IP address or hostname of the miner. The integration verifies it through the AxeOS API.",
+        "data": {
+          "host": "Device IP or hostname"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconnect {name}",
+        "description": "Enter the miner's current IP address or hostname.",
+        "data": {
+          "host": "Device IP or hostname"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Unable to reach the miner. Check the address and make sure the AxeOS web interface is reachable.",
+      "invalid_device": "The device did not return the expected AxeOS data.",
+      "invalid_host": "Enter a plain HTTP IP address or hostname, with no path.",
+      "unknown": "Unexpected error. Check the Home Assistant logs.",
+      "unsupported_device": "This device is not a supported NMAxe-family miner."
+    },
+    "abort": {
+      "already_configured": "This miner is already configured.",
+      "reconfigure_successful": "Reconfiguration was successful.",
+      "unique_id_mismatch": "The device at this address is not the miner this entry was configured for."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "NMAxe options",
+        "description": "Polling is intentionally slow by default so the ESP32 is not overloaded.",
+        "data": {
+          "scan_interval": "Status update interval",
+          "pool_refresh_interval": "Pool settings refresh interval"
+        },
+        "data_description": {
+          "scan_interval": "Seconds between status requests. Minimum 15, maximum 3600.",
+          "pool_refresh_interval": "Seconds between pool configuration reads. Set to 0 to disable reading the pool settings endpoint."
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "active_pool": {
+        "name": "Active pool"
+      },
+      "app_sha256": {
+        "name": "Application SHA-256"
+      },
+      "asic_count": {
+        "name": "ASIC count"
+      },
+      "asic_frequency": {
+        "name": "ASIC frequency"
+      },
+      "asic_model": {
+        "name": "ASIC model"
+      },
+      "asic_temperature": {
+        "name": "ASIC temperature"
+      },
+      "best_difficulty_ever": {
+        "name": "Best difficulty ever"
+      },
+      "best_difficulty_session": {
+        "name": "Best difficulty this session"
+      },
+      "blocks_found": {
+        "name": "Blocks found"
+      },
+      "efficiency": {
+        "name": "Efficiency"
+      },
+      "fallback_pool": {
+        "name": "Fallback pool"
+      },
+      "fan_rpm": {
+        "name": "Fan {fan} RPM"
+      },
+      "fan_speed": {
+        "name": "Fan {fan} speed"
+      },
+      "firmware_version": {
+        "name": "Firmware version"
+      },
+      "free_heap": {
+        "name": "Free heap"
+      },
+      "hashrate": {
+        "name": "Hashrate"
+      },
+      "input_current": {
+        "name": "Input current"
+      },
+      "input_voltage": {
+        "name": "Input voltage"
+      },
+      "last_share_difficulty": {
+        "name": "Last share difficulty"
+      },
+      "min_free_heap": {
+        "name": "Minimum free heap"
+      },
+      "miner_state": {
+        "name": "Miner state",
+        "state": {
+          "error": "Error",
+          "paused": "Paused",
+          "pausing": "Pausing",
+          "resuming": "Resuming",
+          "running": "Running",
+          "unknown": "Unknown"
+        }
+      },
+      "network_difficulty": {
+        "name": "Network difficulty"
+      },
+      "pool_difficulty": {
+        "name": "Pool difficulty"
+      },
+      "pool_source": {
+        "name": "Active pool source",
+        "state": {
+          "custom": "Custom",
+          "fallback": "Fallback",
+          "primary": "Primary",
+          "unknown": "Unknown"
+        }
+      },
+      "pool_user": {
+        "name": "Pool username"
+      },
+      "power": {
+        "name": "Power"
+      },
+      "primary_pool": {
+        "name": "Primary pool"
+      },
+      "share_acceptance_rate": {
+        "name": "Share acceptance rate"
+      },
+      "shares_accepted": {
+        "name": "Shares accepted"
+      },
+      "shares_rejected": {
+        "name": "Shares rejected"
+      },
+      "shares_submitted": {
+        "name": "Shares submitted"
+      },
+      "total_uptime": {
+        "name": "Total uptime"
+      },
+      "uptime": {
+        "name": "Uptime"
+      },
+      "vcore_actual": {
+        "name": "Actual core voltage"
+      },
+      "vcore_requested": {
+        "name": "Requested core voltage"
+      },
+      "vcore_temperature": {
+        "name": "VCORE temperature"
+      },
+      "wifi_rssi": {
+        "name": "Wi-Fi signal"
+      },
+      "wifi_ssid": {
+        "name": "Wi-Fi network"
+      }
+    },
+    "binary_sensor": {
+      "benchmark_mode": {
+        "name": "Benchmark mode"
+      },
+      "mining": {
+        "name": "Mining"
+      },
+      "paused": {
+        "name": "Paused"
+      },
+      "pool_connected": {
+        "name": "Pool connected"
+      }
+    }
+  }
+}
