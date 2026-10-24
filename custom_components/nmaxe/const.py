@@ -7,6 +7,19 @@ from logging import Logger, getLogger
 DOMAIN = "nmaxe"
 LOGGER: Logger = getLogger(__package__)
 
+CONFIG_ENTRY_VERSION = 2
+DEFAULT_ENABLED_ENTITY_KEYS = frozenset(
+    {
+        "blocks_found",
+        "efficiency",
+        "hashrate",
+        "miner_state",
+        "pool_connected",
+        "power",
+        "share_acceptance_rate",
+    }
+)
+
 MANUFACTURER = "NMTech"
 SUPPORTED_MODEL_PREFIXES = ("nmaxe", "nmqaxe")
 

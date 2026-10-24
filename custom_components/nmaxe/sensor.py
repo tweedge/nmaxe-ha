@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from operator import attrgetter
 from typing import TYPE_CHECKING
 
@@ -28,6 +28,7 @@ from homeassistant.const import (
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.typing import StateType
 
+from .const import DEFAULT_ENABLED_ENTITY_KEYS
 from .entity import NMAxeEntity
 from .models import NMAxeData
 
@@ -474,6 +475,15 @@ async def async_setup_entry(
                 )
             )
 
+    descriptions = [
+        replace(
+            description,
+            entity_registry_enabled_default=(
+                description.key in DEFAULT_ENABLED_ENTITY_KEYS
+            ),
+        )
+        for description in descriptions
+    ]
     async_add_entities(
         NMAxeSensor(coordinator, description) for description in descriptions
     )

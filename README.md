@@ -19,6 +19,21 @@ The integration never changes miner settings. It only performs HTTP GETs against
 - Fan speed/RPM, Wi-Fi RSSI/SSID, free heap, uptime, firmware version
 - Diagnostics download with secret-like fields redacted
 - Configurable polling intervals, with pool settings read much less often than status
+- Only core entities enabled by default; every other sensor is available but disabled
+
+## Enabled by default
+
+The default dashboard stays focused on mining health:
+
+- Blocks found
+- Efficiency
+- Hashrate
+- Miner state
+- Pool connected
+- Power
+- Share acceptance rate
+
+All other sensors and binary sensors are still created and available, but disabled in the entity registry. Enable the ones you need from the device's entity list.
 
 ## Installation
 

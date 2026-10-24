@@ -10,8 +10,13 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
+from custom_components.nmaxe import async_migrate_entry
 from custom_components.nmaxe.api import NMAxeApiClient
-from custom_components.nmaxe.const import CONF_HOST, DOMAIN
+from custom_components.nmaxe.const import (
+    CONF_HOST,
+    CONFIG_ENTRY_VERSION,
+    DOMAIN,
+)
 from custom_components.nmaxe.exceptions import NMAxeConnectionError
 from tests.fixtures import HOST, POOL_CONFIG, SECRET, SYSTEM_INFO, UNIQUE_ID
 
@@ -76,6 +81,22 @@ async def test_setup_creates_entities(hass: HomeAssistant) -> None:
     }
     assert expected <= entities.keys()
 
+    core = {
+        "blocks_found",
+        "efficiency",
+        "hashrate",
+        "miner_state",
+        "pool_connected",
+        "power",
+        "share_acceptance_rate",
+    }
+    for key in expected:
+        entity = entities[key]
+        if key in core:
+            assert entity.disabled_by is None
+        else:
+            assert entity.disabled_by is er.RegistryEntryDisabler.INTEGRATION
+
     def state_for(key: str):
         entity = entities[key]
         state = hass.states.get(entity.entity_id)
@@ -83,18 +104,19 @@ async def test_setup_creates_entities(hass: HomeAssistant) -> None:
         return state
 
     assert state_for("hashrate").state == "1200.5"
-    assert state_for("input_voltage").state == "12.0"
-    assert state_for("shares_submitted").state == "1027"
+    assert state_for("power").state == "25.4"
+    assert state_for("blocks_found").state == "2"
     assert state_for("share_acceptance_rate").state == "99.7"
     assert state_for("efficiency").state == "21.16"
     assert state_for("miner_state").state == "running"
-    assert state_for("pool_source").state == "primary"
-    assert state_for("active_pool").state == "stratum+tcp://pool.example.com:3333"
-    assert state_for("pool_user").state == "bc1qexample.worker1"
-    assert state_for("fan_0_rpm").state == "2800"
     assert state_for("pool_connected").state == "on"
-    assert state_for("mining").state == "on"
-    assert state_for("paused").state == "off"
+
+    assert hass.states.get(entities["input_voltage"].entity_id) is None
+    assert hass.states.get(entities["shares_submitted"].entity_id) is None
+    assert hass.states.get(entities["pool_source"].entity_id) is None
+    assert hass.states.get(entities["fan_0_rpm"].entity_id) is None
+    assert hass.states.get(entities["mining"].entity_id) is None
+    assert hass.states.get(entities["paused"].entity_id) is None
 
     device = dr.async_get(hass).async_get_device_by_identifier(
         (DOMAIN, entry.entry_id),
@@ -126,3 +148,47 @@ async def test_setup_retries_when_device_is_offline(hass: HomeAssistant) -> None
         await hass.async_block_till_done()
 
     assert entry.state is ConfigEntryState.SETUP_RETRY
+
+
+async def test_migration_disables_non_core_entities(hass: HomeAssistant) -> None:
+    """Disable enabled non-core entities when upgrading an old entry."""
+    entry = _mock_entry()
+    entry.add_to_hass(hass)
+    registry = er.async_get(hass)
+    prefix = f"{entry.entry_id}_"
+
+    core = registry.async_get_or_create(
+        DOMAIN,
+        "sensor",
+        f"{prefix}hashrate",
+        config_entry=entry,
+        suggested_object_id="hashrate",
+    )
+    other = registry.async_get_or_create(
+        DOMAIN,
+        "sensor",
+        f"{prefix}input_voltage",
+        config_entry=entry,
+        suggested_object_id="input_voltage",
+    )
+    user_disabled = registry.async_get_or_create(
+        DOMAIN,
+        "sensor",
+        f"{prefix}asic_temperature",
+        config_entry=entry,
+        suggested_object_id="asic_temperature",
+        disabled_by=er.RegistryEntryDisabler.USER,
+    )
+
+    assert await async_migrate_entry(hass, entry)
+
+    assert entry.version == CONFIG_ENTRY_VERSION
+    assert registry.async_get(core.entity_id).disabled_by is None
+    assert (
+        registry.async_get(other.entity_id).disabled_by
+        is er.RegistryEntryDisabler.INTEGRATION
+    )
+    assert (
+        registry.async_get(user_disabled.entity_id).disabled_by
+        is er.RegistryEntryDisabler.USER
+    )

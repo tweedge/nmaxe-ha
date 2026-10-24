@@ -13,6 +13,7 @@ from .const import (
     CONF_HOST,
     CONF_POOL_REFRESH_INTERVAL,
     CONF_SCAN_INTERVAL,
+    CONFIG_ENTRY_VERSION,
     DEFAULT_POOL_REFRESH_INTERVAL,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
@@ -43,7 +44,7 @@ def _host_schema(default_host: str) -> vol.Schema:
 class NMAxeConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle installation and reconfiguration of a miner."""
 
-    VERSION = 1
+    VERSION = CONFIG_ENTRY_VERSION
 
     async def async_step_user(
         self,

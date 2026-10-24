@@ -16,6 +16,7 @@ from custom_components.nmaxe.const import (
     CONF_HOST,
     CONF_POOL_REFRESH_INTERVAL,
     CONF_SCAN_INTERVAL,
+    CONFIG_ENTRY_VERSION,
     DOMAIN,
 )
 from custom_components.nmaxe.exceptions import (
@@ -60,6 +61,7 @@ async def test_user_flow_success(hass: HomeAssistant) -> None:
     assert result["title"] == "NMAxeGamma (nmaxe-gamma-01)"
     assert result["data"] == {CONF_HOST: HOST}
     assert result["result"].unique_id == UNIQUE_ID
+    assert result["result"].version == CONFIG_ENTRY_VERSION
 
 
 @pytest.mark.parametrize(

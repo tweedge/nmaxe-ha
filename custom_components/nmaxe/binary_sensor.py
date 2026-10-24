@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import TYPE_CHECKING
 
 from homeassistant.components.binary_sensor import (
@@ -13,6 +13,7 @@ from homeassistant.components.binary_sensor import (
 )
 from homeassistant.helpers.entity import EntityCategory
 
+from .const import DEFAULT_ENABLED_ENTITY_KEYS
 from .entity import NMAxeEntity
 from .models import NMAxeData
 
@@ -89,7 +90,15 @@ async def async_setup_entry(
     """Set up NMAxe binary sensors."""
     coordinator = entry.runtime_data.coordinator
     async_add_entities(
-        NMAxeBinarySensor(coordinator, description)
+        NMAxeBinarySensor(
+            coordinator,
+            replace(
+                description,
+                entity_registry_enabled_default=(
+                    description.key in DEFAULT_ENABLED_ENTITY_KEYS
+                ),
+            ),
+        )
         for description in BINARY_SENSOR_DESCRIPTIONS
     )
 
