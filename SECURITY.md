@@ -2,7 +2,7 @@
 
 Please report vulnerabilities privately through GitHub Security Advisories:
 
-https://github.com/tweedge/nmaxe/security/advisories/new
+https://github.com/tweedge/nmaxe-ha/security/advisories/new
 
 Do not include pool passwords, payout keys you want kept private, or full miner API responses in public issues. Diagnostics from the integration redact password-like fields, but review anything you attach before posting it.
 

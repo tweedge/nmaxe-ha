@@ -1,8 +1,8 @@
-# nmaxe
+# nmaxe-ha
 
-[![Validate](https://github.com/tweedge/nmaxe/actions/workflows/validate.yml/badge.svg)](https://github.com/tweedge/nmaxe/actions/workflows/validate.yml)
-[![Tests](https://github.com/tweedge/nmaxe/actions/workflows/tests.yml/badge.svg)](https://github.com/tweedge/nmaxe/actions/workflows/tests.yml)
-[![License](https://img.shields.io/github/license/tweedge/nmaxe)](https://github.com/tweedge/nmaxe)
+[![Validate](https://github.com/tweedge/nmaxe-ha/actions/workflows/validate.yml/badge.svg)](https://github.com/tweedge/nmaxe-ha/actions/workflows/validate.yml)
+[![Tests](https://github.com/tweedge/nmaxe-ha/actions/workflows/tests.yml/badge.svg)](https://github.com/tweedge/nmaxe-ha/actions/workflows/tests.yml)
+[![License](https://img.shields.io/github/license/tweedge/nmaxe-ha)](https://github.com/tweedge/nmaxe-ha)
 [![Written By](https://img.shields.io/badge/written%20by-some%20nerd-red.svg)](https://chris.partridge.tech)
 [![Follow author on Bluesky](https://img.shields.io/bluesky/followers/tweedge.net)](https://bsky.app/profile/tweedge.net)
 [![Follow author on Mastodon](https://img.shields.io/mastodon/follow/108210086817505115?domain=https%3A%2F%2Fcybersecurity.theater)](https://cybersecurity.theater/@tweedge)
@@ -48,7 +48,7 @@ Technical telemetry such as input voltage/current, ASIC frequency, temperatures,
 1. Install [HACS](https://hacs.xyz/) if you have not already.
 2. Open **HACS → Integrations**.
 3. Open the three-dot menu → **Custom repositories**.
-4. Add `https://github.com/tweedge/nmaxe` with category **Integration**.
+4. Add `https://github.com/tweedge/nmaxe-ha` with category **Integration**.
 5. Search for **NMAxe**, install it, and restart Home Assistant.
 6. Go to **Settings → Devices & services → Add integration → NMAxe**.
 7. Enter the miner's IP address or hostname, for example `192.168.1.42` or `nmaxe.local`.
@@ -56,9 +56,9 @@ Technical telemetry such as input voltage/current, ASIC frequency, temperatures,
 ### Manual
 
 ```bash
-git clone https://github.com/tweedge/nmaxe.git /tmp/nmaxe
+git clone https://github.com/tweedge/nmaxe-ha.git /tmp/nmaxe-ha
 mkdir -p /config/custom_components
-cp -r /tmp/nmaxe/custom_components/nmaxe /config/custom_components/
+cp -r /tmp/nmaxe-ha/custom_components/nmaxe /config/custom_components/
 ```
 
 Restart Home Assistant, then add the integration as described above.
