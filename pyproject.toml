@@ -1,6 +1,6 @@
 [project]
-name = "nmaxe-hacs"
-version = "0.3.0"
+name = "nmaxe"
+version = "0.3.1"
 description = "Home Assistant custom integration for NMAxe-family AxeOS miners"
 readme = "README.md"
 requires-python = ">=3.13"

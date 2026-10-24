@@ -1,9 +1,11 @@
-# nmaxe-hacs
+# nmaxe
 
-[![Validate](https://github.com/tweedge/nmaxe-hacs/actions/workflows/validate.yml/badge.svg)](https://github.com/tweedge/nmaxe-hacs/actions/workflows/validate.yml)
-[![Tests](https://github.com/tweedge/nmaxe-hacs/actions/workflows/tests.yml/badge.svg)](https://github.com/tweedge/nmaxe-hacs/actions/workflows/tests.yml)
-[![Security](https://github.com/tweedge/nmaxe-hacs/actions/workflows/security.yml/badge.svg)](https://github.com/tweedge/nmaxe-hacs/actions/workflows/security.yml)
-[![License](https://img.shields.io/github/license/tweedge/nmaxe-hacs)](https://github.com/tweedge/nmaxe-hacs)
+[![Validate](https://github.com/tweedge/nmaxe/actions/workflows/validate.yml/badge.svg)](https://github.com/tweedge/nmaxe/actions/workflows/validate.yml)
+[![Tests](https://github.com/tweedge/nmaxe/actions/workflows/tests.yml/badge.svg)](https://github.com/tweedge/nmaxe/actions/workflows/tests.yml)
+[![License](https://img.shields.io/github/license/tweedge/nmaxe)](https://github.com/tweedge/nmaxe)
+[![Written By](https://img.shields.io/badge/written%20by-some%20nerd-red.svg)](https://chris.partridge.tech)
+[![Follow author on Bluesky](https://img.shields.io/bluesky/followers/tweedge.net)](https://bsky.app/profile/tweedge.net)
+[![Follow author on Mastodon](https://img.shields.io/mastodon/follow/108210086817505115?domain=https%3A%2F%2Fcybersecurity.theater)](https://cybersecurity.theater/@tweedge)
 
 A read-only Home Assistant integration for NMAxe-family miners running [AxeOS firmware](https://github.com/NMminer1024/ESP-Miner-NMAxe). It polls the miner's local API slowly and exposes hashrate, power, temperatures, blocks, shares, pool status, payout username, fans, Wi-Fi, and system health.
 
@@ -46,7 +48,7 @@ Technical telemetry such as input voltage/current, ASIC frequency, temperatures,
 1. Install [HACS](https://hacs.xyz/) if you have not already.
 2. Open **HACS → Integrations**.
 3. Open the three-dot menu → **Custom repositories**.
-4. Add `https://github.com/tweedge/nmaxe-hacs` with category **Integration**.
+4. Add `https://github.com/tweedge/nmaxe` with category **Integration**.
 5. Search for **NMAxe**, install it, and restart Home Assistant.
 6. Go to **Settings → Devices & services → Add integration → NMAxe**.
 7. Enter the miner's IP address or hostname, for example `192.168.1.42` or `nmaxe.local`.
@@ -54,9 +56,9 @@ Technical telemetry such as input voltage/current, ASIC frequency, temperatures,
 ### Manual
 
 ```bash
-git clone https://github.com/tweedge/nmaxe-hacs.git /tmp/nmaxe-hacs
+git clone https://github.com/tweedge/nmaxe.git /tmp/nmaxe
 mkdir -p /config/custom_components
-cp -r /tmp/nmaxe-hacs/custom_components/nmaxe /config/custom_components/
+cp -r /tmp/nmaxe/custom_components/nmaxe /config/custom_components/
 ```
 
 Restart Home Assistant, then add the integration as described above.

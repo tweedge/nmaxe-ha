@@ -5,12 +5,12 @@
     "@tweedge"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/tweedge/nmaxe-hacs",
+  "documentation": "https://github.com/tweedge/nmaxe",
   "integration_type": "device",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/tweedge/nmaxe-hacs/issues",
+  "issue_tracker": "https://github.com/tweedge/nmaxe/issues",
   "loggers": [
     "nmaxe"
   ],
-  "version": "0.3.0"
+  "version": "0.3.1"
 }
