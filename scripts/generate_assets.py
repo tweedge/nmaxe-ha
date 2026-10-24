@@ -1,4 +1,4 @@
-"""Generate the NMAxe brand icon and logo assets."""
+"""Generate the NMAxe icon and logo assets."""
 
 from __future__ import annotations
 
@@ -194,7 +194,7 @@ def _draw_logo(width: int, height: int, *, dark: bool) -> Image.Image:
 
 
 def main() -> None:
-    """Write all brand assets and print the final layout measurements."""
+    """Write all icon and logo assets and print the final layout measurements."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     _draw_icon(ICON_SIZE).save(OUTPUT_DIR / "icon.png", optimize=True)

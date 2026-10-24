@@ -107,14 +107,14 @@ ruff check .
 ruff format --check .
 ```
 
-To regenerate the icons/assets:
+To regenerate the icons and logo:
 
 ```bash
-pip install -r requirements_brand.txt
-python scripts/generate_brand.py
+pip install -r requirements_assets.txt
+python scripts/generate_assets.py
 ```
 
-The generator writes light and dark logo variants plus the icon and 2x assets. Edit the constants at the top of `scripts/generate_brand.py` to adjust sizes, padding, text, and colors.
+The generator writes light and dark logo variants plus the icon and 2x assets. Edit the constants at the top of `scripts/generate_assets.py` to adjust sizes, padding, text, and colors.
 
 CI runs hassfest, HACS validation, Ruff, pytest, CodeQL, dependency review, and zizmor on every push and pull request.
 
