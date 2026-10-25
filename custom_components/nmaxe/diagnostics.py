@@ -20,7 +20,10 @@ _SECRET_KEYS = frozenset(
         "passwd",
         "pwd",
         "secret",
+        "ssid",
         "token",
+        "user",
+        "username",
         "wifi_pass",
         "wifipass",
     }
@@ -44,7 +47,7 @@ async def async_get_config_entry_diagnostics(
     hass: HomeAssistant,
     entry: NMAxeConfigEntry,
 ) -> dict[str, Any]:
-    """Return config entry diagnostics with secret-like keys removed."""
+    """Return config entry diagnostics with sensitive values redacted."""
     coordinator = entry.runtime_data.coordinator
     payload: dict[str, Any] = {
         "entry": {

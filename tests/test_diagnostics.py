@@ -24,12 +24,16 @@ def test_redact_nested_secrets() -> None:
             "password": SECRET,
             "nested": [{"pwd": SECRET, "safe": "value"}],
             "safe": "value",
+            "ssid": SECRET,
+            "user": SECRET,
         }
     )
     assert redacted["password"] == "**REDACTED**"
     assert redacted["nested"][0]["pwd"] == "**REDACTED**"
     assert redacted["nested"][0]["safe"] == "value"
     assert redacted["safe"] == "value"
+    assert redacted["ssid"] == "**REDACTED**"
+    assert redacted["user"] == "**REDACTED**"
 
 
 async def test_diagnostics_contain_no_secret(hass: HomeAssistant) -> None:
@@ -60,8 +64,13 @@ async def test_diagnostics_contain_no_secret(hass: HomeAssistant) -> None:
     serialized = json.dumps(diagnostics)
 
     assert SECRET not in serialized
+    assert SYSTEM_INFO.identity.ssid not in serialized
+    assert SYSTEM_INFO.stratum.user not in serialized
     assert "pwd" not in serialized.casefold()
     assert diagnostics["entry"]["host"] == HOST
+    assert diagnostics["data"]["info"]["identity"]["ssid"] == "**REDACTED**"
+    assert diagnostics["data"]["info"]["stratum"]["user"] == "**REDACTED**"
+    assert diagnostics["data"]["pools"]["primary"]["user"] == "**REDACTED**"
     assert diagnostics["data"]["pools"]["primary"]["url"] == (
         "stratum+tcp://pool.example.com:3333"
     )

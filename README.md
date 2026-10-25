@@ -83,7 +83,7 @@ That said, to interface with the NMAxe miner, this code performs the following:
 - Only unauthenticated HTTP `GET` requests are made. There are no write, reboot, pause, or configuration endpoints implemented in this repo.
 - `/api/system/info` contains the pool password. The parser keeps only the pool URL and username; the password is discarded before data reaches the coordinator, entities, diagnostics, or logs.
 - `/api/setting/mining` also contains pool passwords. It is read at most once per pool refresh interval, and only URL/username fields are retained.
-- Diagnostics recursively redact password, secret, token, and API-key-like fields.
+- Diagnostics recursively redact passwords, tokens, API keys, pool usernames/payout addresses, and Wi-Fi SSIDs.
 - Responses are capped at 64 KiB, redirects are not followed, requests time out after 10 seconds, and only plain `http://` hosts without paths or credentials are accepted.
 - No cloud service, telemetry, or external dependency is used.
 
