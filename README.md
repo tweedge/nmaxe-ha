@@ -17,11 +17,11 @@ The integration never changes miner settings. It only performs HTTP GETs against
 
 1. Install [HACS](https://hacs.xyz/) if you have not already.
 2. Open **HACS → Integrations**.
-3. Open the three-dot menu → **Custom repositories**.
-4. Add `https://github.com/tweedge/nmaxe-ha` with category **Integration**.
-5. Search for **NMAxe**, install it, and restart Home Assistant.
-6. Go to **Settings → Devices & services → Add integration → NMAxe**.
-7. Enter the miner's IP address or hostname, for example `192.168.1.42` or `nmaxe.local`.
+3. Search for **NMAxe**, install it, and restart Home Assistant.
+4. Go to **Settings → Devices & services → Add integration → NMAxe**.
+5. Enter the miner's IP address or hostname, for example `192.168.1.42` or `nmaxe.local`.
+
+If NMAxe does not appear in HACS yet, the default list can take up to 8 hours to sync. As a fallback, open the three-dot menu → **Custom repositories**, add `https://github.com/tweedge/nmaxe-ha` with category **Integration**, then search again.
 
 ### Manual
 
