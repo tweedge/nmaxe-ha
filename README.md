@@ -13,7 +13,22 @@ The integration never changes miner settings. It only performs HTTP GETs against
 
 ## Installation
 
-### HACS
+### Marketplace (Home Assistant 2026.11 or newer)
+
+The Marketplace comes with Home Assistant, so there is nothing to set up. No GitHub account is needed to install or update catalog projects.
+
+1. Go to **Settings → Marketplace**.
+2. The first time you open it, read the notice and select **I understand the risks and agree**. Browsing works before that, but installing and updating do not.
+3. Find **NMAxe** and select **Install**. You land straight in its setup flow, without a restart.
+4. Enter the miner's IP address or hostname, for example `192.168.1.42` or `nmaxe.local`.
+
+If NMAxe is not in the catalog, select **Add from link** and enter `https://github.com/tweedge/nmaxe-ha`. Custom repositories require a GitHub connection.
+
+Updates will appear automatically under **Settings → Updates**. After updating, a repair tells you when a restart is needed and can restart Home Assistant for you.
+
+### HACS (Home Assistant versions prior to 2026.11)
+
+The HACS installer is replaced by Marketplace at Home Assistant 2026.11, so a separate HACS installation is only possible on earlier versions.
 
 1. Install [HACS](https://hacs.xyz/) if you have not already.
 2. Open **HACS → Integrations**.
@@ -21,19 +36,7 @@ The integration never changes miner settings. It only performs HTTP GETs against
 4. Go to **Settings → Devices & services → Add integration → NMAxe**.
 5. Enter the miner's IP address or hostname, for example `192.168.1.42` or `nmaxe.local`.
 
-If NMAxe does not appear in HACS yet, the default list can take up to 8 hours to sync. As a fallback, open the three-dot menu → **Custom repositories**, add `https://github.com/tweedge/nmaxe-ha` with category **Integration**, then search again.
-
-### Manual
-
-```bash
-git clone https://github.com/tweedge/nmaxe-ha.git /tmp/nmaxe-ha
-mkdir -p /config/custom_components
-cp -r /tmp/nmaxe-ha/custom_components/nmaxe /config/custom_components/
-```
-
-Restart Home Assistant, then add the integration as described above.
-
-A static IP or hostname for the miner is strongly recommended. If its address changes, use **Reconfigure** on the integration entry rather than removing and re-adding it.
+If NMAxe does not appear in HACS, open the three-dot menu → **Custom repositories**, add `https://github.com/tweedge/nmaxe-ha` with category **Integration**, then search again.
 
 ## Features
 
@@ -93,7 +96,7 @@ That said, to interface with the NMAxe miner, this code performs the following:
 - **Invalid device**: the device did not return the expected nested AxeOS response. This integration targets firmware with the v3 `/api/system/info` shape (tested against v3.2.01).
 - **Unsupported device**: only NMAxe and NMQAxe-family models are accepted.
 - **Pool sensors show unknown**: pool settings polling is disabled, or the firmware did not return the settings endpoint. Set a non-zero pool refresh interval.
-- **Address changed**: use **Reconfigure** and enter the new IP/hostname.
+- **Address changed**: use **Reconfigure** and enter the new IP/hostname. A static IP or hostname for the miner is strongly recommended.
 
 ## Development
 
@@ -120,4 +123,4 @@ CI runs hassfest, HACS validation, Ruff, pytest, CodeQL, dependency review, and 
 
 ## License
 
-MIT. THis project is not affiliated with NMTech, NMminer, or the NMAxe project. The pickaxe glyph used in assets is from Material Design Icons (Apache-2.0).
+MIT. This project is not affiliated with NMTech, NMminer, or the NMAxe project. The pickaxe glyph used in assets is from Material Design Icons (Apache-2.0).
